@@ -13,6 +13,7 @@ class RabbitmqAPIUtils:
     def __init__(self, host, user, password):
         self.user = user
         self.password = password
+        self.host = host
         self.url = 'https://{}/api/'.format(host)
 
     def get_all_queues(self):
@@ -29,6 +30,27 @@ class RabbitmqAPIUtils:
         url_method += ('queues/{}/{}'.format(vhost, queue))
         r = requests.get(url_method, auth=(self.user, self.password))
         return r.status_code == 200
+
+    def export_definitions(self):
+        logger.info("Call RabbitMQ api... {}".format(self.url))
+        logger.info("Export definitions from host: {}".format(self.host))
+        url_method = self.url
+        url_method += 'definitions'
+        r = requests.get(url_method, auth=(self.user, self.password))
+        return r
+
+    def import_definitions(self, definitions):
+        logger.info("Call RabbitMQ api...")
+        logger.info("Export definitions to host: {}".format(self.host))
+        url_method = self.url
+        url_method += 'definitions'
+        logger.info("Import definitions URL: {}".format(url_method))
+        headers = {'Content-type': 'application/json'}
+        data = {"file": definitions}
+        logger.info("Importing definitions...")
+        r = requests.put(url_method, auth=(self.user, self.password),
+                         data=json.dumps(data), headers=headers)
+        return r
 
     def create_federation_policy(self, vhost):
         logger.info("Call RabbitMQ api...")

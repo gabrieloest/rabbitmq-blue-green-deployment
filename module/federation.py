@@ -43,9 +43,17 @@ green_url = os.environ.get(
                                                  green_host, green_user))
 logger.info("Green URL: {}".format(green_url))
 
-
 blue_rmq_utils = rabbitmq_api_utils.RabbitmqAPIUtils(blue_host, blue_user,
                                                      blue_password)
+
+green_rmq_utils = rabbitmq_api_utils.RabbitmqAPIUtils(green_host, green_user,
+                                                      green_password)
+
+blue_json = blue_rmq_utils.export_definitions().json()
+
+import_result = green_rmq_utils.import_definitions(blue_json)
+
+logger.info("Import definitions from blue to green: {}".format(import_result))
 
 all_queues_blue = blue_rmq_utils.get_all_queues()
 queues_to_federate = list(filter(
@@ -63,9 +71,6 @@ params.socket_timeout = 5
 # Connect to CloudAMQP
 connection = pika.BlockingConnection(params)
 channel = connection.channel()  # start a channel
-
-green_rmq_utils = rabbitmq_api_utils.RabbitmqAPIUtils(green_host, green_user,
-                                                      green_password)
 
 for item in vhosts:
     green_rmq_utils.create_federation_upstream(green_user, blue_url)
