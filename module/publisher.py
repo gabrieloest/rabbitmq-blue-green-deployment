@@ -39,7 +39,7 @@ channel = connection.channel()
 queue = input("Please enter queue name: ")
 
 # Declare a queue
-channel.queue_declare(queue=queue)
+channel.queue_declare(queue=queue, durable=True)
 
 # send a message
 number = 1
@@ -48,4 +48,4 @@ while True:
         queue, random.randint(0, 100)*number))
     print(" [x] Message {} sent to queue {}".format(number, queue))
     number += 1
-    time.sleep(0.5)
+    time.sleep(1)

@@ -32,7 +32,7 @@ params.socket_timeout = 5
 
 def message_process_function(channel, method, msg):
     print("Processing message...")
-    # time.sleep(0.3)
+    time.sleep(1)
     tag = method.delivery_tag
     print("Message {} processing finished".format(tag))
     channel.basic_ack(delivery_tag=tag)
