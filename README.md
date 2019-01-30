@@ -1,6 +1,6 @@
 # rabbitmq-federation-utils
 
-Create file config/config.yml with the followed content:
+Create file config/config.yml with the following content:
 ```
 rabbitmq-blue:
   host:
