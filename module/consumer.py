@@ -2,30 +2,21 @@ import pika
 import os
 import logging
 import time
-import yaml
+import config_resolver
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-logger.info('Loading configurations....')
-with open("./config/config.yml", 'r') as ymlfile:
-    cfg = yaml.load(ymlfile)
+cluster = input("Please enter the cluster name: ")
 
-cluster = input("Please enter the cluste name: ")
+config = config_resolver.ConfigResolver(logger, cluster)
+server_config = config.load_server_config()
 
-rabbitmq = cfg[cluster]
-host = rabbitmq['host']
-user = rabbitmq['user']
-password = rabbitmq['password']
-
-logger.info('host: {}'.format(host))
-logger.info('user: {}'.format(user))
-logger.info('password: {}'.format(password))
-
-# Parse CLODUAMQP_URL (fallback to localhost)
 logger.info("Parse CLODUAMQP_URL (fallback to localhost)...")
-url = os.environ.get(
-    'CLOUDAMQP_URL', 'amqp://{}:{}@{}/{}'.format(user, password, host, user))
+url = os.environ.get('CLOUDAMQP_URL', 'amqp://{}:{}@{}/{}'
+                     .format(server_config['user'], server_config['password'],
+                             server_config['host'], server_config['vhost']))
+
 params = pika.URLParameters(url)
 params.socket_timeout = 5
 
@@ -54,8 +45,7 @@ def callback(ch, method, properties, body):
 queue = input("Please enter queue name: ")
 
 channel.basic_qos(prefetch_count=1)
-channel.basic_consume(callback,
-                      queue=queue)
+channel.basic_consume(callback, queue=queue)
 
 # start consuming (blocks)
 channel.start_consuming()
