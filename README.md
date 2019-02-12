@@ -8,14 +8,14 @@ The objective of this project, is to make easy do major upgrades of RabbitMq ver
 Blue-green deployment is an upgrade strategy that is based on the idea of to setting up a second RabbitMQ cluster (the "green" one) next to the current production cluster (the "blue" one). Applications are then switched to the "green" cluster. When that migration is done, the "blue" cluster is decomissioned (shut down).
 
 ## How it works?
-1. Deploy a brand new cluster(green)
-2. Importing definitions
-3. Configuring Queue Federation
+1. Deploy a brand new cluster(green) - Manually
+2. Importing definitions - Script
+3. Configuring Queue Federation - Script
     1. Define the upstream on "green" and point it to "blue"
     2. Define a policy matching all queues which configure blue as the upstream
-4. Switch consumers
-5. Draining messages
-5. Switch producers
+4. Switch consumers - Manually
+5. Draining messages - Script
+5. Switch producers - Manually
 
 ## Configuration
 1. Create file `config/config.yml` with the following content:
