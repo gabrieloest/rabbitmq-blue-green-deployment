@@ -49,5 +49,5 @@ python -m pip install -r requirements.txt
 
 After deploy the brand new cluster, execute `blue_green.py` script:
 ```
-python module/federation.py
+python module/blue_green.py
 ```
