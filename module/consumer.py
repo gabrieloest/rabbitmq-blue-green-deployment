@@ -12,8 +12,8 @@ cluster = input("Please enter the cluster name: ")
 config = config_resolver.ConfigResolver(logger, cluster)
 server_config = config.load_server_config()
 
-logger.info("Parse CLODUAMQP_URL (fallback to localhost)...")
-url = os.environ.get('CLOUDAMQP_URL', 'amqp://{}:{}@{}/{}'
+logger.info("Parse URL ")
+url = os.environ.get('URL', 'amqp://{}:{}@{}/{}'
                      .format(server_config['user'], server_config['password'],
                              server_config['host'], server_config['vhost']))
 
@@ -21,7 +21,7 @@ params = pika.URLParameters(url)
 params.socket_timeout = 5
 
 
-def message_process_function(channel, method, msg):
+def message_process(channel, method, msg):
     print("Processing message...")
     time.sleep(1)
     tag = method.delivery_tag
@@ -39,7 +39,7 @@ channel = connection.channel()  # start a channel
 
 
 def callback(ch, method, properties, body):
-    message_process_function(ch, method, body)
+    message_process(ch, method, body)
 
 
 queue = input("Please enter queue name: ")

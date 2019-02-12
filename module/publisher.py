@@ -14,8 +14,8 @@ cluster = input("Please enter the cluster name: ")
 config = config_resolver.ConfigResolver(logger, cluster)
 server_config = config.load_server_config()
 
-logger.info("Parse CLODUAMQP_URL (fallback to localhost)...")
-url = os.environ.get('CLOUDAMQP_URL', 'amqp://{}:{}@{}/{}'
+logger.info("Parse URL")
+url = os.environ.get('URL', 'amqp://{}:{}@{}/{}'
                      .format(server_config['user'], server_config['password'],
                              server_config['host'], server_config['vhost']))
 

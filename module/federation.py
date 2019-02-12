@@ -26,11 +26,13 @@ green_url = os.environ.get('URL', 'amqp://{}:{}@{}'
 
 logger.info("Green URL: {}".format(green_url))
 
-blue_rmq_utils = rabbitmq_api_utils.RabbitmqAPIUtils(blue_server_config['host'],
+blue_rmq_utils = rabbitmq_api_utils.RabbitmqAPIUtils(blue_server_config['protocol'],
+                                                     blue_server_config['host'],
                                                      blue_server_config['user'],
                                                      blue_server_config['password'])
 
-green_rmq_utils = rabbitmq_api_utils.RabbitmqAPIUtils(green_server_config['host'],
+green_rmq_utils = rabbitmq_api_utils.RabbitmqAPIUtils(green_server_config['protocol'],
+                                                      green_server_config['host'],
                                                       green_server_config['user'],
                                                       green_server_config['password'])
 
