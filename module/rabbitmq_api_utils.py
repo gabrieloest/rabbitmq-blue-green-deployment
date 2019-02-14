@@ -77,3 +77,17 @@ class RabbitmqAPIUtils:
         r = requests.put(url_method, auth=(self.user, self.password),
                          data=json.dumps(data), headers=headers)
         return r
+
+    def create_shovel(self, vhost, src_queue, dest_queue, upstream_url, downstream_url):
+        logger.info("Call RabbitMQ api...")
+        url_method = self.url
+        url_method += 'parameters/shovel/{}/shovel-{}'.format(vhost, src_queue)
+        logger.info("Create shovel URL: {}".format(url_method))
+        headers = {'Content-type': 'application/json'}
+        data = {"value": {"src-protocol": "amqp091", "src-uri":  upstream_url,
+                          "src-queue":  src_queue, "dest-protocol": "amqp091",
+                          "dest-uri": downstream_url, "dest-queue": dest_queue}}
+        logger.info("Create shovel DATA: {}".format(data))
+        r = requests.put(url_method, auth=(self.user, self.password),
+                         data=json.dumps(data), headers=headers)
+        return r
