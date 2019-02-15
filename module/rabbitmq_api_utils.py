@@ -10,16 +10,23 @@ class RabbitmqAPIUtils:
 
     headers = {'Content-type': 'application/json'}
 
-    def __init__(self, protocol, host, user, password):
+    def __init__(self, protocol, host, port, user, password):
         self.user = user
         self.password = password
         self.host = host
-        self.url = '{}://{}/api/'.format(protocol, host)
+        self.url = '{}://{}:{}/api/'.format(protocol, host, port)
 
     def get_all_queues(self):
         logger.info("Call RabbitMQ api... {}".format(self.url))
         url_method = self.url
         url_method += 'queues'
+        r = requests.get(url_method, auth=(self.user, self.password))
+        return r
+
+    def get_queue_by_name(self, vhost, queue_name):
+        url_method = self.url
+        url_method += 'queues/{}/{}'.format(vhost, queue_name)
+        logger.info("Call RabbitMQ api... {}".format(url_method))
         r = requests.get(url_method, auth=(self.user, self.password))
         return r
 
@@ -46,10 +53,9 @@ class RabbitmqAPIUtils:
         url_method += 'definitions'
         logger.info("Import definitions URL: {}".format(url_method))
         headers = {'Content-type': 'application/json'}
-        data = {"file": definitions}
         logger.info("Importing definitions...")
-        r = requests.put(url_method, auth=(self.user, self.password),
-                         data=json.dumps(data), headers=headers)
+        r = requests.post(url_method, auth=(self.user, self.password),
+                         json=definitions, headers=headers)
         return r
 
     def create_federation_policy(self, vhost):

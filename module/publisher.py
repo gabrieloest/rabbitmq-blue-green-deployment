@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 cluster = input("Please enter the cluster name: ")
 
-config = config_resolver.ConfigResolver(logger, cluster)
-server_config = config.load_server_config()
+config = config_resolver.ConfigResolver(logger)
+server_config = config.load_server_config(cluster)
 
 logger.info("Parse URL")
 url = os.environ.get('URL', 'amqp://{}:{}@{}/{}'
@@ -30,6 +30,7 @@ channel = connection.channel()
 
 rabbitmq_api_utils = rabbitmq_api_utils.RabbitmqAPIUtils(server_config['protocol'],
                                                          server_config['host'],
+                                                         server_config['http-port'],
                                                          server_config['user'],
                                                          server_config['password'])
 
