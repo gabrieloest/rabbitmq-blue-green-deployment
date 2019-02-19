@@ -61,3 +61,6 @@ print("vhosts: {}".format(vhosts))
 for item in vhosts:
     green_rmq_utils.create_federation_upstream(item, blue_url)
     green_rmq_utils.create_federation_policy(item)
+
+for key, value in queue_name_vhost.items():
+    green_rmq_utils.create_shovel(value, key, key, blue_url, green_url)
